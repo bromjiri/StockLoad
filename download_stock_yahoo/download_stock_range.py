@@ -4,21 +4,17 @@
 from datetime import date, timedelta
 import csv
 import os
-# pandas package required
 import pandas_datareader.data as web
-# necessary to import new fix (changed in May 2017):
-# https://stackoverflow.com/questions/44045158/python-pandas-datareader-no-longer-works-for-yahoo-finance-changed-url
-# import fix_yahoo_finance
-
+from time import sleep
 #############
 ### SETUP ###
 
 # start and end date of required stock data (YYYY, M, D)
-start = date(2017, 9, 27)    # including
-end = date(2017, 9, 29)     # including
+start = date(2017, 9, 27)       # including
+end = date(2017, 9, 29)         # including
 
 # input file (relative path)
-input_file = 'companies_small.csv'
+input_file = 'companies.csv'
 
 # output file (relative path)
 output_dir = 'stock_data'
@@ -46,7 +42,8 @@ with open(input_file, 'r') as comp:
 
         try:
             # download stock data
-            df = web.get_data_yahoo(ticker, start, end)
+            df = web.DataReader(ticker, 'yahoo', start, end)
+            sleep(5)
             # add company column
             df['Company'] = name
             # append to output file
